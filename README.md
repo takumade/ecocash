@@ -75,6 +75,21 @@ if (transaction.status === "SUCCESS") {
 }
 ```
 
+## Going Live
+
+To go live, you can set the mode to "live" as follows:
+
+```javascript
+const merchant = new EcoCash("<apiKey>", "<merchant>", "live");     
+``` 
+
+OR
+
+```javascript
+const merchant = new EcoCash("<apiKey>", "<merchant>");     
+merchant.setLiveMode();
+```
+
 ## Special Thanks
 
 - [Ecocash](https://ecocash.co.zw/)

@@ -1,5 +1,5 @@
 {
-  "name": "personal",
+  "name": "ecocash",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
@@ -15,10 +15,10 @@
     "pretest": "npm run compile",
     "posttest": "npm run lint"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["ecocash", "ecocash-sdk", "ecocash-open-api"],
+  "author": "madechangu.takunda@gmail.com",
+  "license": "MIT",
+  "description": "Ecocash Javascript SDK",
   "devDependencies": {
     "@types/node": "^22.7.5",
     "concurrently": "^9.2.1",

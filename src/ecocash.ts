@@ -74,6 +74,25 @@ class EcoCash {
       return response.json();
     }
 
+    async lookupTransaction(reference: string, phone: string) {
+      let url = `${this.baseUrl}/api/v1/transaction/c2b/status/${this.mode}`;
+
+      let headers = this.getHeaders();
+
+      let body = {
+        "sourceMobileNumber": phone,
+        "sourceReference": reference
+      };
+
+      let response = await fetch(url, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(body)
+      });
+
+      return response.json();
+    }
+
 }
 
 export default EcoCash

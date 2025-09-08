@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig-google.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "build",
+    "resolveJsonModule": true
+  },
+  "include": [".eslintrc.json", "src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["test/fixtures/**/*.*", "template/**/*.*"]
+}

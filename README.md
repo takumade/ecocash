@@ -95,6 +95,13 @@ const merchant = new EcoCash("<apiKey>", "<merchant>");
 merchant.setLiveMode();
 ```
 
+## Contributing
+
+Contributions are welcome! Please read our [contributing guidelines](CONTRIBUTING.md) for more information.
+
+
+
+
 ## Special Thanks
 
 - [Ecocash](https://ecocash.co.zw/)

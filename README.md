@@ -8,6 +8,10 @@ This is a Javascript SDK library for EcoCash Open API.
 npm i ecocash
 ```
 
+
+> [!NOTE]
+> You can use whichever package manager you prefer, it should work.
+
 ## Usage
 
 The basic follow is as follows:
@@ -23,7 +27,7 @@ const EcoCash = require("ecocash");
 const merchant = new EcoCash("<apiKey>", "<merchant code>");
 ```
 
-### Step 2: Initialize a payment as follows
+### Step 2: Initialize a payment
 
 ```javascript
 const response = await merchant.initPayment("26377854266", 20.05, "bread");
@@ -41,7 +45,8 @@ if (transaction.status === "SUCCESS") {
 }
 ``` 
 
-You can use bare loops on their own or add a timeout to poll for transaction status or add an exponential backoff to poll for transaction status.
+> [!NOTE]
+> You can use loops on their own or add a timeout  or add an exponential backoff to poll for transaction status.
 
 
 ### Step 4: Refunding a payment

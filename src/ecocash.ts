@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import axios from "axios";
-import { RefundDetails } from "./interfaces";
+import { InitPaymentResponse, RefundDetails } from "./interfaces";
 
 
 
@@ -30,7 +30,7 @@ class EcoCash {
       };
     }
 
-    async initPayment(phone: string, amount: number, reason: string) {
+    async initPayment(phone: string, amount: number, reason: string): Promise<InitPaymentResponse> {
       let reference = randomUUID();
 
 

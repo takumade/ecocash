@@ -9,3 +9,17 @@ export interface InitPaymentResponse {
     currency: string,
     sourceReference: string
 }
+
+interface TransactionAmount {
+    amount: number,
+    currency: string
+}
+
+export interface LookupTransactionResponse {
+    amount: TransactionAmount,
+    customerMsisdn: string,
+    reference: string,
+    ecocashReference: string,
+    status: string,
+    transactionDateTime: string
+}

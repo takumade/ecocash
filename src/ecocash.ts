@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import axios from "axios";
-import { InitPaymentResponse, RefundDetails } from "./interfaces";
+import { InitPaymentResponse, LookupTransactionResponse, RefundDetails, RefundResponse } from "./interfaces";
 
 
 
@@ -52,7 +52,7 @@ class EcoCash {
       }
     }
 
-    async refundPayment(details: RefundDetails) {
+    async refundPayment(details: RefundDetails): Promise<RefundResponse> {
       let url = `${this.baseUrl}/api/v2/refund/instant/c2b/${this.mode}`;
 
       let body = {
@@ -70,7 +70,7 @@ class EcoCash {
       return response
     }
 
-    async lookupTransaction(reference: string, phone: string) {
+    async lookupTransaction(reference: string, phone: string): Promise<LookupTransactionResponse> {
       let url = `${this.baseUrl}/api/v1/transaction/c2b/status/${this.mode}`;
 
       let body = {

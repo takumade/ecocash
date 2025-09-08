@@ -23,3 +23,23 @@ export interface LookupTransactionResponse {
     status: string,
     transactionDateTime: string
 }
+
+export interface RefundResponse {
+    sourceReference: string,
+    transactionEndTime: string,
+    callbackUrl: string,
+    destinationReferenceCode: string,
+    sourceMobileNumber: string,
+    transactionStatus: string, // COMPLETED
+    amount: number,
+    destinationEcocashReference: string,
+    clientMerchantCode: string,
+    clientMerchantNumber: string,
+    clienttransactionDate: string,
+    description: string,
+    responseMessage: string,  // COMPLETED
+    currency: string,
+    paymentAmount: number,
+    ecocashReference: string,
+    transactionstartTime: string
+}

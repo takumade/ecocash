@@ -1,21 +1,25 @@
 import { randomUUID } from "node:crypto";
 import fetch from "node-fetch";
+import { RefundDetails } from "./interfaces";
 
-interface RefundDetails {
-    reference: string, phone: string, amount: number, clientName: string, reason: string, currency?: string 
-}
+
 
 class EcoCash {
     apiKey: string;
     merchant: string;
 
     baseUrl: string = "https://developers.ecocash.co.zw/api/ecocash_pay/";
-    mode: string = "sandbox";
+    mode: string;
 
 
-    constructor(apiKey: string, merchant: string) {
+    constructor(apiKey: string, merchant: string, mode: string = "sandbox") {
         this.apiKey = apiKey;
         this.merchant = merchant;
+        this.mode = mode;
+    }
+
+    setLiveMode() {
+        this.mode = "live";
     }
 
     getHeaders() {

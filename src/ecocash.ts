@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import fetch from "node-fetch";
+import axios from "axios";
 import { RefundDetails } from "./interfaces";
 
 
@@ -33,31 +33,27 @@ class EcoCash {
     async initPayment(phone: string, amount: number, reason: string) {
       let reference = randomUUID();
 
-      let url = `${this.baseUrl}api/v2/payment/instant/c2b/${this.mode}`;
 
-      let headers = this.getHeaders();
+      let url = `${this.baseUrl}api/v2/payment/instant/c2b/${this.mode}`;
 
       let body = {
         "customerMsisdn": phone,
         "amount": amount,
         "reason": reason,
         "currency": "USD",  
-        "reference": reference
+        "sourceReference": reference
       };
 
-      let response = await fetch(url, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(body)
-      });
+      let response = await this.makeRequest(url, "POST", body);
 
-      return response.json();
+      return {
+        ...response,
+        ...body
+      }
     }
 
     async refundPayment(details: RefundDetails) {
       let url = `${this.baseUrl}/api/v2/refund/instant/c2b/${this.mode}`;
-
-      let headers = this.getHeaders();
 
       let body = {
         "origionalEcocashTransactionReference": details.reference,
@@ -69,34 +65,41 @@ class EcoCash {
         "reasonForRefund": details.reason
       };
 
-      let response = await fetch(url, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(body)
-      });
+      let response = await this.makeRequest(url, "POST", body);
 
-      return response.json();
+      return response
     }
 
     async lookupTransaction(reference: string, phone: string) {
       let url = `${this.baseUrl}/api/v1/transaction/c2b/status/${this.mode}`;
-
-      let headers = this.getHeaders();
 
       let body = {
         "sourceMobileNumber": phone,
         "sourceReference": reference
       };
 
-      let response = await fetch(url, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(body)
-      });
+      let response = await this.makeRequest(url, "POST", body);
 
-      return response.json();
+      return response
     }
 
+    async makeRequest(url: string, method: string, body: any) {
+
+      try {
+      let headers = this.getHeaders();
+
+      let response = await axios({
+        method: method,
+        url: url,
+        headers: headers,
+        data: body
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+    }
 }
 
 export default EcoCash

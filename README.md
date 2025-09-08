@@ -1,6 +1,6 @@
-# EcoCash Javascript Library
+# Ecocash Javascript Library
 
-This is a Javascript SDK library for EcoCash Open API.
+This is a Javascript SDK library for Ecocash Open API.
 
 ## Installation
 
@@ -33,17 +33,42 @@ const merchant = new EcoCash("<apiKey>", "<merchant code>");
 const response = await merchant.initPayment("26377854266", 20.05, "bread");
 ```
 
+Response:
+
+```javascript
+{
+    phone: '26377854266',
+    amount: 20.05,
+    reason: 'bread',
+    currency: 'USD',
+    sourceReference: '325a802f-943e-47c2-addf-010285f09cea'
+}
+```
+
 ### Step 3: Poll for transaction status
 
 You can poll for transaction status as follows:
 
 ```javascript
-const transaction = await merchant.lookupTransaction(response.reference, response.phone);
+const transaction = await merchant.lookupTransaction(response.sourceReference, response.phone);
 
 if (transaction.status === "SUCCESS") {
     console.log("Transaction successful");
 }
 ``` 
+
+Response:
+
+```javascript
+{
+    amount: { amount: 100, currency: 'USD' },
+    customerMsisdn: '263778548832',
+    reference: '325a802f-943e-47c2-addf-010285f09cea',
+    ecocashReference: 'MP250908.1537.A22242',
+    status: 'SUCCESS',
+    transactionDateTime: '2025-09-08 15:37:16'
+}
+```
 
 > [!NOTE]
 > You can use loops on their own or add a timeout  or add an exponential backoff to poll for transaction status.

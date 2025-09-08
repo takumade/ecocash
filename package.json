@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
+    "dev": "concurrently \"npm run build -- --watch\" \"npm run start\"",
     "start": "node build/index.js",
     "lint": "gts lint",
     "clean": "gts clean",
@@ -20,10 +21,11 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^22.7.5",
+    "concurrently": "^9.2.1",
     "gts": "^6.0.2",
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2"
+    "axios": "^1.11.0"
   }
 }

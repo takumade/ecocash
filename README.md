@@ -8,9 +8,24 @@ This is a Javascript SDK library for Ecocash Open API.
 npm i ecocash
 ```
 
-
 > [!NOTE]
 > You can use whichever package manager you prefer, it should work.
+
+### For development
+
+Run build and start scripts concurrently:
+
+```bash
+npm run dev
+```
+
+Or run build and start scripts separately:
+
+```bash
+npm run build
+npm run start
+```
+
 
 ## Usage
 

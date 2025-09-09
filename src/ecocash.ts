@@ -168,4 +168,4 @@ class Ecocash {
     }
 }
 
-export { Ecocash as default }
+export = Ecocash;

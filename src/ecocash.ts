@@ -84,6 +84,8 @@ class Ecocash {
 
       let response = await this.makeRequest(url, "POST", body);
 
+      response.paymentSuccess = response.status === "SUCCESS";
+
       return response
     }
 
@@ -100,35 +102,26 @@ class Ecocash {
       let sleep = options.sleep || 1000;
       let interval = options.interval || 10;
 
-      let lookupResponse: LookupTransactionResponse = await this.makeRequest(url, "POST", body);
+      let lookupResponse: LookupTransactionResponse = await this.lookupTransaction(response.sourceReference, response.phone);
       lookupResponse.paymentSuccess = lookupResponse.status === "SUCCESS";
 
       if(strategy === PollStrategies.INTERVAL) {
         
-
-
         for (let i = 0; i < interval; i++) {
-          lookupResponse = await this.makeRequest(url, "POST", body);
+          lookupResponse = await this.lookupTransaction(response.sourceReference, response.phone);
 
-          if(lookupResponse.status === "SUCCESS") {
-            lookupResponse.paymentSuccess = true;
-            return lookupResponse
-          }
+          if(lookupResponse.paymentSuccess) return lookupResponse
 
           await new Promise(resolve => setTimeout(resolve, sleep));
         }
-
         
       } else if(strategy === PollStrategies.BACKOFF) {
       
 
         for (let i = 0; i < backoff; i++) {
-          lookupResponse = await this.makeRequest(url, "POST", body);
+          lookupResponse = await this.lookupTransaction(response.sourceReference, response.phone);
 
-          if(lookupResponse.status === "SUCCESS") {
-            lookupResponse.paymentSuccess = true;
-            return lookupResponse
-          }
+          if(lookupResponse.paymentSuccess) return lookupResponse
 
           await new Promise(resolve => setTimeout(resolve, sleep));
           sleep *= multiplier;
@@ -136,15 +129,16 @@ class Ecocash {
         
       } else {
         for (let i = 0; i < interval; i++) {
-          lookupResponse = await this.makeRequest(url, "POST", body);
+          lookupResponse = await this.lookupTransaction(response.sourceReference, response.phone);
 
-          if(lookupResponse.status === "SUCCESS") {
-            lookupResponse.paymentSuccess = true;
-            return lookupResponse
-          }
+          if(lookupResponse.paymentSuccess) return lookupResponse
         }
         
       }
+
+      console.log("Strategy not specified or timeout reached!")
+
+      return lookupResponse
     }
 
     async makeRequest(url: string, method: string, body: any) {

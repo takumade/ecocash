@@ -48,6 +48,7 @@ class Ecocash {
 
       let body = {
         "customerMsisdn": phone,
+        "phone": phone,
         "amount": amount,
         "reason": reason,
         "currency": "USD",  

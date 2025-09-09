@@ -32,14 +32,14 @@ npm run start
 The basic follow is as follows:
 
 
-### Step 1: Create an EcoCash object
+### Step 1: Create an Ecocash object
 
-You can create an EcoCash object as follows: 
+You can create an Ecocash object as follows: 
 
 ```javascript
-const EcoCash = require("ecocash");
+const Ecocash = require("ecocash");
 
-const merchant = new EcoCash("<apiKey>", "<merchant code>");
+const merchant = new Ecocash("<apiKey>", "<merchant code>");
 ```
 
 ### Step 2: Initialize a payment
@@ -105,9 +105,9 @@ const response = await merchant.refundPayment({
 ### Full Example
 
 ```javascript
-const EcoCash = require("ecocash");
+const Ecocash = require("ecocash");
 
-const merchant = new EcoCash("apiKey", "merchant");
+const merchant = new Ecocash("apiKey", "merchant");
 const response = await merchant.initPayment("26377854266", 20.05, "bread");
 
 console.log(response);
@@ -125,13 +125,13 @@ if (transaction.status === "SUCCESS") {
 To go live, you can set the mode to "live" as follows:
 
 ```javascript
-const merchant = new EcoCash("<apiKey>", "<merchant>", "live");     
+const merchant = new Ecocash("<apiKey>", "<merchant>", "live");     
 ``` 
 
 OR
 
 ```javascript
-const merchant = new EcoCash("<apiKey>", "<merchant>");     
+const merchant = new Ecocash("<apiKey>", "<merchant>");     
 merchant.setLiveMode();
 ```
 

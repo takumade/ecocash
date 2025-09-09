@@ -90,14 +90,7 @@ class Ecocash {
     }
 
     async pollTransaction(response: InitPaymentResponse, strategy: PollStrategies = PollStrategies.INTERVAL, options?: any): Promise<LookupTransactionResponse> {
-      let url = `${this.baseUrl}/api/v1/transaction/c2b/status/${this.mode}`;
 
-      let body = {
-        "sourceMobileNumber":   response.phone,
-        "sourceReference": response.sourceReference
-      };
-
-      let backoff = options.timeout || 10;
       let multiplier = options.multiplier || 2;
       let sleep = options.sleep || 1000;
       let interval = options.interval || 10;
@@ -118,7 +111,7 @@ class Ecocash {
       } else if(strategy === PollStrategies.BACKOFF) {
       
 
-        for (let i = 0; i < backoff; i++) {
+        for (let i = 0; i < interval; i++) {
           lookupResponse = await this.lookupTransaction(response.sourceReference, response.phone);
 
           if(lookupResponse.paymentSuccess) return lookupResponse

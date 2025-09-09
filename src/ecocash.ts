@@ -97,9 +97,17 @@ class Ecocash {
 
     async pollTransaction(response: InitPaymentResponse, strategy: PollStrategies = PollStrategies.INTERVAL, options: PollOptions = {}): Promise<LookupTransactionResponse> {
 
+      
       let multiplier = options?.multiplier || 2;
       let sleep = options?.sleep || 1000;
       let interval = options?.interval || 10;
+
+      console.log("Polling for transaction status...", {
+        strategy,
+        multiplier,
+        sleep,
+        interval
+      })
 
       let lookupResponse: LookupTransactionResponse = await this.lookupTransaction(response.sourceReference, response.phone);
       lookupResponse.paymentSuccess = lookupResponse.status === "SUCCESS";

@@ -8,6 +8,12 @@ enum PollStrategies {
     BACKOFF = "backoff"
 }
 
+interface PollOptions {
+    multiplier?: number;
+    sleep?: number;
+    interval?: number;
+}
+
 class Ecocash {
     apiKey: string;
     merchant: string;
@@ -89,11 +95,11 @@ class Ecocash {
       return response
     }
 
-    async pollTransaction(response: InitPaymentResponse, strategy: PollStrategies = PollStrategies.INTERVAL, options?: any): Promise<LookupTransactionResponse> {
+    async pollTransaction(response: InitPaymentResponse, strategy: PollStrategies = PollStrategies.INTERVAL, options: PollOptions = {}): Promise<LookupTransactionResponse> {
 
-      let multiplier = options.multiplier || 2;
-      let sleep = options.sleep || 1000;
-      let interval = options.interval || 10;
+      let multiplier = options?.multiplier || 2;
+      let sleep = options?.sleep || 1000;
+      let interval = options?.interval || 10;
 
       let lookupResponse: LookupTransactionResponse = await this.lookupTransaction(response.sourceReference, response.phone);
       lookupResponse.paymentSuccess = lookupResponse.status === "SUCCESS";

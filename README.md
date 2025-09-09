@@ -64,6 +64,10 @@ Response:
 
 You can poll for transaction status as follows:
 
+Known statuses(for now):
+- `SUCCESS`
+- `PENDING_VALIDATION`
+
 ```javascript
 const transaction = await merchant.lookupTransaction(response.sourceReference, response.phone);
 

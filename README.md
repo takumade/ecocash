@@ -86,7 +86,54 @@ Response:
 ```
 
 > [!NOTE]
-> You can use loops on their own or add a timeout  or add an exponential backoff to poll for transaction status.
+> The default lookupTransaction method requires you to add poll logic by yourself. But with the pollTransaction method, you can poll for transaction status as follows:
+
+```javascript
+merchant.pollTransaction(response, strategy, options);
+```
+
+Where:
+
+- response: The response from the `initPayment` method
+- strategy: The strategy to use for polling (SIMPLE, INTERVAL, BACKOFF)
+- options: The options to use for polling (interval, backoff, multiplier, sleep)
+
+NB: The default strategy is `INTERVAL`.
+NB: Options are optional and default to { interval: 10, multiplier: 2, sleep: 1000 }.
+
+#### Polling examples
+
+Interval strategy:
+```javascript
+// Poll for transaction status with interval
+const transaction = await merchant.pollTransaction(response, PollStrategies.INTERVAL, { interval: 10 });
+
+if (transaction.paymentSuccess) {
+    console.log("Transaction successful");
+}
+```
+
+
+Backoff strategy:
+```javascript
+// Poll for transaction status with backoff
+const transaction = await merchant.pollTransaction(response, PollStrategies.BACKOFF, { multiplier: 2, interval: 15, sleep: 2000 });
+
+if (transaction.paymentSuccess) {
+    console.log("Transaction successful");
+}
+```
+
+Simple strategy:
+```javascript
+// Poll for transaction status with simple strategy
+const transaction = await merchant.pollTransaction(response, PollStrategies.SIMPLE);
+
+if (transaction.paymentSuccess) {
+    console.log("Transaction successful");
+}
+
+```
 
 
 ### Step 4: Refunding a payment
@@ -113,9 +160,9 @@ const response = await merchant.initPayment("26377854266", 20.05, "bread");
 console.log(response);
 
 // Poll for transaction status
-const transaction = await merchant.lookupTransaction(response.reference, response.phone);
+const transaction = await merchant.pollTransaction(response);
 
-if (transaction.status === "SUCCESS") {
+if (transaction.paymentSuccess) {
     console.log("Transaction successful");
 }
 ```

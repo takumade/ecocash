@@ -20,6 +20,7 @@ export interface LookupTransactionResponse {
     customerMsisdn: string,
     reference: string,
     ecocashReference: string,
+    paymentSuccess: boolean,
     status: string,
     transactionDateTime: string
 }

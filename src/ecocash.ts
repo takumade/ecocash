@@ -2,7 +2,11 @@ import { randomUUID } from "node:crypto";
 import axios from "axios";
 import { InitPaymentResponse, LookupTransactionResponse, RefundDetails, RefundResponse } from "./interfaces";
 
-
+enum PollStrategies {
+    SIMPLE = "simple",
+    INTERVAL = "interval",
+    BACKOFF = "backoff"
+}
 
 class Ecocash {
     apiKey: string;
@@ -80,7 +84,54 @@ class Ecocash {
 
       let response = await this.makeRequest(url, "POST", body);
 
+      response.paymentSuccess = response.status === "SUCCESS";
+
       return response
+    }
+
+    async pollTransaction(response: InitPaymentResponse, strategy: PollStrategies = PollStrategies.INTERVAL, options?: any): Promise<LookupTransactionResponse> {
+
+      let multiplier = options.multiplier || 2;
+      let sleep = options.sleep || 1000;
+      let interval = options.interval || 10;
+
+      let lookupResponse: LookupTransactionResponse = await this.lookupTransaction(response.sourceReference, response.phone);
+      lookupResponse.paymentSuccess = lookupResponse.status === "SUCCESS";
+
+      if(strategy === PollStrategies.INTERVAL) {
+        
+        for (let i = 0; i < interval; i++) {
+          lookupResponse = await this.lookupTransaction(response.sourceReference, response.phone);
+
+          if(lookupResponse.paymentSuccess) return lookupResponse
+
+          await new Promise(resolve => setTimeout(resolve, sleep));
+        }
+        
+      } else if(strategy === PollStrategies.BACKOFF) {
+      
+
+        for (let i = 0; i < interval; i++) {
+          lookupResponse = await this.lookupTransaction(response.sourceReference, response.phone);
+
+          if(lookupResponse.paymentSuccess) return lookupResponse
+
+          await new Promise(resolve => setTimeout(resolve, sleep));
+          sleep *= multiplier;
+        }
+        
+      } else {
+        for (let i = 0; i < interval; i++) {
+          lookupResponse = await this.lookupTransaction(response.sourceReference, response.phone);
+
+          if(lookupResponse.paymentSuccess) return lookupResponse
+        }
+        
+      }
+
+      console.log("Strategy not specified or timeout reached!")
+
+      return lookupResponse
     }
 
     async makeRequest(url: string, method: string, body: any) {

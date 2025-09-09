@@ -2,7 +2,11 @@ import { randomUUID } from "node:crypto";
 import axios from "axios";
 import { InitPaymentResponse, LookupTransactionResponse, RefundDetails, RefundResponse } from "./interfaces";
 
-
+enum PollStrategies {
+    SIMPLE = "simple",
+    INTERVAL = "interval",
+    BACKOFF = "backoff"
+}
 
 class Ecocash {
     apiKey: string;
@@ -81,6 +85,66 @@ class Ecocash {
       let response = await this.makeRequest(url, "POST", body);
 
       return response
+    }
+
+    async pollTransaction(response: InitPaymentResponse, strategy: PollStrategies = PollStrategies.INTERVAL, options?: any): Promise<LookupTransactionResponse> {
+      let url = `${this.baseUrl}/api/v1/transaction/c2b/status/${this.mode}`;
+
+      let body = {
+        "sourceMobileNumber":   response.phone,
+        "sourceReference": response.sourceReference
+      };
+
+      let backoff = options.timeout || 10;
+      let multiplier = options.multiplier || 2;
+      let sleep = options.sleep || 1000;
+      let interval = options.interval || 10;
+
+      let lookupResponse: LookupTransactionResponse = await this.makeRequest(url, "POST", body);
+      lookupResponse.paymentSuccess = lookupResponse.status === "SUCCESS";
+
+      if(strategy === PollStrategies.INTERVAL) {
+        
+
+
+        for (let i = 0; i < interval; i++) {
+          lookupResponse = await this.makeRequest(url, "POST", body);
+
+          if(lookupResponse.status === "SUCCESS") {
+            lookupResponse.paymentSuccess = true;
+            return lookupResponse
+          }
+
+          await new Promise(resolve => setTimeout(resolve, sleep));
+        }
+
+        
+      } else if(strategy === PollStrategies.BACKOFF) {
+      
+
+        for (let i = 0; i < backoff; i++) {
+          lookupResponse = await this.makeRequest(url, "POST", body);
+
+          if(lookupResponse.status === "SUCCESS") {
+            lookupResponse.paymentSuccess = true;
+            return lookupResponse
+          }
+
+          await new Promise(resolve => setTimeout(resolve, sleep));
+          sleep *= multiplier;
+        }
+        
+      } else {
+        for (let i = 0; i < interval; i++) {
+          lookupResponse = await this.makeRequest(url, "POST", body);
+
+          if(lookupResponse.status === "SUCCESS") {
+            lookupResponse.paymentSuccess = true;
+            return lookupResponse
+          }
+        }
+        
+      }
     }
 
     async makeRequest(url: string, method: string, body: any) {

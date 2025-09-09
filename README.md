@@ -71,7 +71,7 @@ Known statuses(for now):
 ```javascript
 const transaction = await merchant.lookupTransaction(response.sourceReference, response.phone);
 
-if (transaction.status === "SUCCESS") {
+if (transaction.paymentSuccess) {
     console.log("Transaction successful");
 }
 ``` 

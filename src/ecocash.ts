@@ -4,7 +4,7 @@ import { InitPaymentResponse, LookupTransactionResponse, RefundDetails, RefundRe
 
 
 
-class EcoCash {
+class Ecocash {
     apiKey: string;
     merchant: string;
 
@@ -102,4 +102,4 @@ class EcoCash {
     }
 }
 
-export default EcoCash
+export { Ecocash as default }

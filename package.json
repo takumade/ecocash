@@ -1,7 +1,14 @@
 {
   "name": "ecocash",
-  "version": "1.0.0",
-  "main": "dist/index.js",
+  "version": "1.0.6",
+  "main": "build/ecocash.js",
+  "exports": {
+    ".": {
+      "import": "./build/ecocash.js",
+      "require": "./build/ecocash.js",
+      "types": "./build/ecocash.d.ts"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
@@ -13,10 +20,15 @@
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "check-imports": "node testfile.js"
   },
-  "keywords": ["ecocash", "ecocash-sdk", "ecocash-open-api"],
-  "author": "madechangu.takunda@gmail.com",
+  "keywords": [
+    "ecocash",
+    "ecocash-sdk",
+    "ecocash-open-api"
+  ],
+  "author": "Takunda Madechangu",
   "license": "MIT",
   "description": "Ecocash Javascript SDK",
   "devDependencies": {
@@ -26,6 +38,14 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "axios": "^1.11.0"
+    "axios": "^1.11.0",
+    "debug": "^4.4.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/takumade/ecocash.git"
+  },
+  "bugs": {
+    "url": "https://github.com/takumade/ecocash/issues"
   }
 }
